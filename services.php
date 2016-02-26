@@ -36,6 +36,11 @@ function validate($secret, $cfg) {
         || (isset($_POST['s']) && in_array(hash("sha256", $_POST['s']), $cfg['secrets']));
 }
 
+function getAuthor($secret, $cfg) {
+    $hash = hash("sha256", $secret);
+    return array_search($hash, $cfg['secrets']);
+}
+
 function encrypt($data, $password, $cfg) {
     return openssl_encrypt($data, "AES-256-CBC", $password, false, $cfg['salt']);
 }
@@ -53,7 +58,7 @@ if (validate($_GET['s'], $cfg)) {
             $note = new Note();
             $note->setId($_GET['n']);
             $note->setText(encrypt("Lorem ipsum.", $_GET['s'], $cfg));
-            $note->setAuthor("wsams");
+            $note->setAuthor(getAuthor($_GET['s'], $cfg));
             $note->setCreated(new DateTime());
             $note->setModified(new DateTime());
             $dm->persist($note);
@@ -70,7 +75,7 @@ if (validate($_GET['s'], $cfg)) {
                 $note = new Note();
                 $note->setId($_POST['n']);
                 $note->setText(encrypt($_POST['text'], $_POST['s'], $cfg));
-                $note->setAuthor("wsams");
+                $note->setAuthor(getAuthor($_POST['s'], $cfg));
                 $note->setCreated(new DateTime());
                 $note->setModified(new DateTime());
             } else {
