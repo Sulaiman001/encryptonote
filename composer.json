@@ -1,0 +1,11 @@
+{
+    "autoload": {
+        "psr-0": {
+            "ocri": "src"
+        }
+    },
+    "require": {
+        "slim/slim": "2.6.*",
+        "doctrine/mongodb-odm": "^1.0.5"
+    }
+}
