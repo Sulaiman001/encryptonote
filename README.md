@@ -2,8 +2,7 @@ Encrypted Notes
 ===============
 
 This is a simple encrypted note taking app.
-Notes are stored encrypted with cbc-256-aes in a MongoDB database. The project is written
-in PHP, jQuery, with persistence handled by Doctrine. The layout is handled by Foundation 6.
+Notes are stored encrypted with openssl AES-256-CBC in a MongoDB database.
 Note editing powered by ckeditor for wysiwyg note taking.
 
 INSTALL
