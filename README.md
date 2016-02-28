@@ -13,7 +13,8 @@ Copy `example.config.php` to `config.php` and edit.
 To create your secret (application API key) hash with sha256. This can be done easily
 with duckduckgo. For example, https://duckduckgo.com/?q=sha256+test&ia=answer
 
-This hash should be stored in the `$cfg['secrets'] = array("your-secret-hash")` array.
+This hash should be stored in the `$cfg['secrets'] = array("your-username" => "your-secret-hash")` array. `your-username` will
+be used to store your author name. There is an `author` field on each `Note`. See `Documents/Note.php`.
 
 Run `composer.phar install`, where composer executable may differ from the example.
 
