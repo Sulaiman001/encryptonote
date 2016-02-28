@@ -15,6 +15,8 @@ with duckduckgo. For example, https://duckduckgo.com/?q=sha256+test&ia=answer
 
 This hash should be stored in the `$cfg['secrets'] = array("your-secret-hash")` array.
 
+Run `composer.phar install`, where composer executable may differ from the example.
+
 Open: https://example.com/notes/index.php?s=your-secret
 
 This will redirect to the `home` note by default. Add the query string parameter
