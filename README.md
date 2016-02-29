@@ -1,9 +1,26 @@
 Encrypted Notes
 ===============
 
-This is a simple encrypted note taking app.
-Notes are stored encrypted with openssl AES-256-CBC (configurable) in a MongoDB database.
-Note editing powered by ckeditor for wysiwyg note taking.
+Encryptonote is a simple encrypted note taking app.
+
+DEPENDENCIES
+============
+
+* PHP (tested on 5.5.22)
+    * openssl module (http://php.net/openssl)
+* Composer (https://getcomposer.org/)
+* Web server (tested on Apache/2.4.12)
+* MongoDB (tested on 2.6.5)
+
+TECHNOLOGIES USED
+=================
+
+* PHP
+* MongoDB
+* jQuery
+* Foundation 6
+* OpenSSL
+* CKEditor
 
 INSTALL
 =======
