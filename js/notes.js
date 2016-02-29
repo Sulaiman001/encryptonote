@@ -27,8 +27,10 @@ function saveNote(noteId, text) {
         success: function(json) {
             if (json.status === "ok") {
                 $(".last-saved").fadeOut("fast");
+                $(".save").fadeOut("fast");
                 $(".last-saved").html(new Date());
                 $(".last-saved").fadeIn("slow");
+                $(".save").fadeIn("slow");
             } else {
                 $(".message").html(json.message).addClass("callout").addClass("warning");
             }
