@@ -1,6 +1,7 @@
 <?php
 
 require_once("config.php");
+require_once("lib/Notes.php");
 
 date_default_timezone_set($cfg['timezone']);
 
@@ -31,62 +32,28 @@ AnnotationDriver::registerAnnotationClasses();
 
 $dm = DocumentManager::create($connection, $config);
 
-/**
- * Validates secret against configured hash.
- */
-function validate($secret, $cfg) {
-    return (isset($_GET['s']) && in_array(hash($cfg['hash'], $_GET['s']), $cfg['secrets']))
-        || (isset($_POST['s']) && in_array(hash($cfg['hash'], $_POST['s']), $cfg['secrets']));
-}
+$notes = new Notes($dm, $cfg);
 
-/**
- * Given a secret extract the author from the config.
- */
-function getAuthor($secret, $cfg) {
-    $hash = hash($cfg['hash'], $secret);
-    return array_search($hash, $cfg['secrets']);
-}
-
-function encrypt($data, $password, $cfg) {
-    return openssl_encrypt($data, $cfg['cipher'], $password, false, $cfg['salt']);
-}
-
-function decrypt($data, $password, $cfg) {
-    return openssl_decrypt($data, $cfg['cipher'], $password, false, $cfg['salt']);
-}
-
-function validateAuthor($secret, $noteId, $cfg, $dm) {
-    $author = getAuthor($secret, $cfg);
-    $note = $dm->find("Documents\Note", $noteId);
-    if (is_null($note)) {
-        return false;
-    } else {
-        if ($author === $note->getAuthor()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-}
-
-if (validate($_GET['s'], $cfg)) {
+if ($notes->validate($_GET['s'])) {
 
     // A note is requested.
     if (isset($_GET['n'])) {
 
-        $note = $dm->find("Documents\Note", $_GET['n']);
+        $note = $notes->getNote($_GET['n']);
         if (is_null($note)) {
             $note = new Note();
             $note->setId($_GET['n']);
-            $note->setText(encrypt("Lorem ipsum.", $_GET['s'], $cfg));
-            $note->setAuthor(getAuthor($_GET['s'], $cfg));
+            $note->setText($notes->encrypt("Lorem ipsum.", $_GET['s']));
+            $note->setAuthor($notes->getAuthor($_GET['s']));
             $note->setCreated(new DateTime());
             $note->setModified(new DateTime());
             $dm->persist($note);
             $dm->flush();
         }
-        if (validateAuthor($_GET['s'], $_GET['n'], $cfg, $dm)) {
-            $note->setText(decrypt($note->getText(), $_GET['s'], $cfg));
+        if ($notes->validateAuthor($_GET['s'], $_GET['n'])) {
+            // This overrides the encrypted text with the decrypted text so that
+            // we can serialize to JSON. Possibly Note->jsonSerialize() could handle the decryption.
+            $note->setText($notes->decrypt($note->getText(), $_GET['s']));
             die(json_encode($note));
         } else {
             die(json_encode(array("status" => "error", "message" => "Access denied")));
@@ -94,27 +61,27 @@ if (validate($_GET['s'], $cfg)) {
 
     // Saving a note.
     } else if (isset($_POST['n']) && isset($_POST['text']) 
-            && validateAuthor($_POST['s'], $_POST['n'], $cfg, $dm)) {
+            && $notes->validateAuthor($_POST['s'], $_POST['n'])) {
 
         try {
-            $note = $dm->find("Documents\Note", $_POST['n']);
+            $note = $notes->getNote($_POST['n']);
             if (is_null($note)) {
                 $note = new Note();
                 $note->setId($_POST['n']);
-                $note->setText(encrypt($_POST['text'], $_POST['s'], $cfg));
-                $note->setAuthor(getAuthor($_POST['s'], $cfg));
+                $note->setText($notes->encrypt($_POST['text'], $_POST['s']));
+                $note->setAuthor($notes->getAuthor($_POST['s']));
                 $note->setCreated(new DateTime());
                 $note->setModified(new DateTime());
             } else {
-                $note->setText(encrypt($_POST['text'], $_POST['s'], $cfg));
+                $note->setText($notes->encrypt($_POST['text'], $_POST['s']));
                 $note->setModified(new DateTime());
             }
             $dm->persist($note);
             $dm->flush();
+            die(json_encode(array("status" => "ok", "message" => "Note saved")));
         } catch (Exception $ex) {
             die(json_encode(array("status" => "error", "message" => "Note not saved: " . $ex->getMessage())));
         }
-        die(json_encode(array("status" => "ok", "message" => "Note saved")));
 
     }
 
