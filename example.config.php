@@ -2,6 +2,7 @@
 
 // Your MongoDB host:port
 $cfg['mongoHost'] = "localhost:27017";
+
 // Each collection for this database comes from entities in Documents/
 $cfg['mongoDatabase'] = "enter_database";
 
@@ -12,8 +13,17 @@ $cfg['timezone'] = "America/Los_Angeles";
 // Authentication happens when you hit ?s=secret where 'secret' is some
 // passphrase that will be hashed by sha256.
 $cfg['secrets'] = array("foousername" => "dea328d398f89527aafc56181d299b35260ef3ba20ab9651afa60e1bad24c089");
+
 // This is a salt for encrypting note text.
 $cfg['salt'] = "h6Dfhrck2NxXD8wI";
+
+// From the command line execute `openssl ciphers` to show all available ciphers if `openssl` is installed.
+// Also see http://us3.php.net/manual/en/openssl.ciphers.php
+$cfg['cipher'] = "AES-256-CBC";
+
+// This is our secret/password hashing algorithm. We use the function,
+// http://php.net/manual/en/function.hash.php
+$cfg['hash'] = "sha256";
 
 // Configure the date format for each todo item. Uses PHP's date() function,
 // http://php.net/manual/en/function.date.php

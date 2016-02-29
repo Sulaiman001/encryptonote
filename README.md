@@ -2,7 +2,7 @@ Encrypted Notes
 ===============
 
 This is a simple encrypted note taking app.
-Notes are stored encrypted with openssl AES-256-CBC in a MongoDB database.
+Notes are stored encrypted with openssl AES-256-CBC (configurable) in a MongoDB database.
 Note editing powered by ckeditor for wysiwyg note taking.
 
 INSTALL

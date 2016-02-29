@@ -11,46 +11,53 @@ use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver;
 
+use Documents;
+use Documents\Note;
+
 $loader->add("Documents", __DIR__);
 
 $mongo = new Mongo($cfg['mongoHost']);
 $connection = new Connection($mongo);
+
 $config = new Configuration();
 $config->setProxyDir(__DIR__ . "/Proxies");
 $config->setProxyNamespace("Proxies");
 $config->setHydratorDir(__DIR__ . "/Hydrators");
 $config->setHydratorNamespace("Hydrators");
 $config->setDefaultDB($cfg['mongoDatabase']);
-
 $config->setMetadataDriverImpl(AnnotationDriver::create(__DIR__ . "/Documents"));
 
 AnnotationDriver::registerAnnotationClasses();
 
 $dm = DocumentManager::create($connection, $config);
 
-use Documents;
-use Documents\Note;
-
+/**
+ * Validates secret against configured hash.
+ */
 function validate($secret, $cfg) {
-    return (isset($_GET['s']) && in_array(hash("sha256", $_GET['s']), $cfg['secrets']))
-        || (isset($_POST['s']) && in_array(hash("sha256", $_POST['s']), $cfg['secrets']));
+    return (isset($_GET['s']) && in_array(hash($cfg['hash'], $_GET['s']), $cfg['secrets']))
+        || (isset($_POST['s']) && in_array(hash($cfg['hash'], $_POST['s']), $cfg['secrets']));
 }
 
+/**
+ * Given a secret extract the author from the config.
+ */
 function getAuthor($secret, $cfg) {
-    $hash = hash("sha256", $secret);
+    $hash = hash($cfg['hash'], $secret);
     return array_search($hash, $cfg['secrets']);
 }
 
 function encrypt($data, $password, $cfg) {
-    return openssl_encrypt($data, "AES-256-CBC", $password, false, $cfg['salt']);
+    return openssl_encrypt($data, $cfg['cipher'], $password, false, $cfg['salt']);
 }
 
 function decrypt($data, $password, $cfg) {
-    return openssl_decrypt($data, "AES-256-CBC", $password, false, $cfg['salt']);
+    return openssl_decrypt($data, $cfg['cipher'], $password, false, $cfg['salt']);
 }
 
 if (validate($_GET['s'], $cfg)) {
 
+    // A note is requested.
     if (isset($_GET['n'])) {
 
         $note = $dm->find("Documents\Note", $_GET['n']);
@@ -67,6 +74,7 @@ if (validate($_GET['s'], $cfg)) {
         $note->setText(decrypt($note->getText(), $_GET['s'], $cfg));
         die(json_encode($note));
 
+    // Saving a note.
     } else if (isset($_POST['n']) && isset($_POST['text'])) {
 
         try {
