@@ -53,10 +53,17 @@ function saveNote(text) {
 
 var init = function() {
     "use strict";
-    var noteId = getNoteId();
-    var secret = undefined !== getSecret() ? getSecret() : "";
-    if (undefined === noteId || noteId === null) {
-        window.location = "#/home/" + secret;
+    switch(getAction()) {
+        case "note":
+            var noteId = getNoteId();
+            var secret = undefined !== getSecret() ? getSecret() : "";
+            if (undefined === noteId || noteId === null) {
+                window.location = "#/note/home/" + secret;
+            }
+            break;
+        default:
+            window.location.hash = "#/note/home/";
+            break;
     }
 };
 
@@ -67,14 +74,19 @@ function getHashVars() {
     return hash.split("/");
 }
 
-function getNoteId() {
+function getAction() {
     "use strict";
     return getHashVars()[1];
 }
 
-function getSecret() {
+function getNoteId() {
     "use strict";
     return getHashVars()[2];
+}
+
+function getSecret() {
+    "use strict";
+    return getHashVars()[3];
 }
 
 $(document).ready(function() {

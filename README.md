@@ -39,8 +39,6 @@ be used to store your author name. There is an `author` field on each `Note`. Se
 
 Run `composer.phar install`, where composer executable may differ from the example.
 
-Open: https://example.com/notes/index.php?s=your-secret
+Replace `{note-id}` with your documents unique id, and `{your-secret}` with your secret or API key (used interchangeably).
 
-This will redirect to the `home` note by default. Add the query string parameter
-`?n=my-note` to edit a note. This is the MongoDB id for a note. Don't forget you
-always have to submit your secret. e.g. `?n=my-note&s=your-secret`
+Open: https://example.com/notes/#/note/{note-id}/{your-secret}
