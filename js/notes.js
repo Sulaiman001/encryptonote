@@ -46,4 +46,14 @@ $(document).ready(function() {
     $(".save").on("click", function() {
         saveNote($("#noteId").val(), CKEDITOR.instances.editor.getData());
     });
+
+    var offset = $(".scroller-save").offset();  
+    $(window).scroll(function () {  
+        var scrollTop = $(window).scrollTop();
+        if (offset.top < scrollTop) {
+            $(".scroller-save").addClass("scroller");
+        } else {
+            $(".scroller-save").removeClass("scroller");
+        }
+    });  
 });

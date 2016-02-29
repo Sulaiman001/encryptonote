@@ -2,3 +2,9 @@ body {
     margin-top:8px;
     margin-bottom:8px;
 }
+
+.scroller {  
+    position:fixed;   
+    top:4px;  
+    right:4px;
+}

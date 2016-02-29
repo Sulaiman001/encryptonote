@@ -38,7 +38,7 @@ $html = <<<eof
                 <form>
                     <div class="row">
                         <div class="large-12 medium-12 small-12 columns align">
-                            <button type="button" class="save success button">Save</button>
+                            <button type="button" class="save success button scroller-save">Save</button>
                             <span class="label">Last saved: <span class="last-saved"></span></span>
                         </div>
                     </div>
