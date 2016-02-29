@@ -55,6 +55,20 @@ function decrypt($data, $password, $cfg) {
     return openssl_decrypt($data, $cfg['cipher'], $password, false, $cfg['salt']);
 }
 
+function validateAuthor($secret, $noteId, $cfg, $dm) {
+    $author = getAuthor($secret, $cfg);
+    $note = $dm->find("Documents\Note", $noteId);
+    if (is_null($note)) {
+        return false;
+    } else {
+        if ($author === $note->getAuthor()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
 if (validate($_GET['s'], $cfg)) {
 
     // A note is requested.
@@ -71,11 +85,16 @@ if (validate($_GET['s'], $cfg)) {
             $dm->persist($note);
             $dm->flush();
         }
-        $note->setText(decrypt($note->getText(), $_GET['s'], $cfg));
-        die(json_encode($note));
+        if (validateAuthor($_GET['s'], $_GET['n'], $cfg, $dm)) {
+            $note->setText(decrypt($note->getText(), $_GET['s'], $cfg));
+            die(json_encode($note));
+        } else {
+            die(json_encode(array("status" => "error", "message" => "Access denied")));
+        }
 
     // Saving a note.
-    } else if (isset($_POST['n']) && isset($_POST['text'])) {
+    } else if (isset($_POST['n']) && isset($_POST['text']) 
+            && validateAuthor($_POST['s'], $_POST['n'], $cfg, $dm)) {
 
         try {
             $note = $dm->find("Documents\Note", $_POST['n']);
