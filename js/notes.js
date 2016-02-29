@@ -39,6 +39,8 @@ function saveNote(noteId, text) {
 $(document).ready(function() {
     //CKEDITOR.instances.editor.on("saveSnapshot", function(e) { });
 
+    FastClick.attach(document.body);
+
     loadNote($("#noteId").val());
 
     $(".save").on("click", function() {
