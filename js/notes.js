@@ -12,8 +12,18 @@ function loadNote(noteId) {
             $(".message").html(json.message).addClass("callout").addClass("warning");
         } else {
             CKEDITOR.replace("editor");
+
             $("#editor").val(json.text);
+            console.log("json.modified.date: " + json.modified.date);
             $(".last-saved").html(new Date(json.modified.date));
+
+            CKEDITOR.instances.editor.on("instanceReady", function() {
+                CKEDITOR.instances.editor.document.on("keyup", function(e) {
+                    if ($(".save").hasClass("success")) {
+                        $(".save").removeClass("success").addClass("warning");
+                    }
+                });
+            });
         }
     });
 }
@@ -31,6 +41,9 @@ function saveNote(noteId, text) {
                 $(".last-saved").html(new Date());
                 $(".last-saved").fadeIn("slow");
                 $(".save").fadeIn("slow");
+                if ($(".save").hasClass("warning")) {
+                    $(".save").removeClass("warning").addClass("success");
+                }
             } else {
                 $(".message").html(json.message).addClass("callout").addClass("warning");
             }
@@ -39,10 +52,11 @@ function saveNote(noteId, text) {
 }
 
 $(document).ready(function() {
-    //CKEDITOR.instances.editor.on("saveSnapshot", function(e) { });
+    //console.log(CKEDITOR.instances.editor.getData());
 
     FastClick.attach(document.body);
 
+    // Note: CKEDITOR is initialized in here. Events are attached in here.
     loadNote($("#noteId").val());
 
     $(".save").on("click", function() {
