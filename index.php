@@ -62,9 +62,6 @@ $html = <<<eof
             </div>
         </div>
 
-        <input id="noteId" name="noteId" type="hidden" value="{$noteId}" />
-        <input id="secret" name="secret" type="hidden" value="{$secret}" />
-
         <script src="js/vendor/jquery.min.js"></script>
         <script src="js/vendor/what-input.min.js"></script>
         <script src="js/foundation.min.js"></script>
