@@ -3,7 +3,7 @@ function enc(s) {
 }
 
 function addSecret() {
-    return "&s=" + enc($("#secret").val());
+    return "&s=" + enc(getSecret());
 }
 
 function loadNote(noteId) {
@@ -28,11 +28,11 @@ function loadNote(noteId) {
     });
 }
 
-function saveNote(noteId, text) {
+function saveNote(text) {
     $.ajax({
         type: "POST",
         url: "services.php",
-        data: "n=" + enc(noteId) + "&text=" + enc(text) + addSecret(),
+        data: "n=" + enc(getNoteId()) + "&text=" + enc(text) + addSecret(),
         dataType: "json",
         success: function(json) {
             if (json.status === "ok") {
@@ -51,16 +51,45 @@ function saveNote(noteId, text) {
     });
 }
 
+var init = function() {
+    "use strict";
+    var noteId = getNoteId();
+    var secret = undefined !== getSecret() ? getSecret() : "";
+    if (undefined === noteId || noteId === null) {
+        window.location = "#/home/" + secret;
+    }
+};
+
+function getHashVars() {
+    "use strict";
+    var hash = window.location.hash;
+    hash = hash.replace(/^#/, "");
+    return hash.split("/");
+}
+
+function getNoteId() {
+    "use strict";
+    return getHashVars()[1];
+}
+
+function getSecret() {
+    "use strict";
+    return getHashVars()[2];
+}
+
 $(document).ready(function() {
-    //console.log(CKEDITOR.instances.editor.getData());
+    init();
+    $(window).on("hashchange", function() {
+        init();
+    });
 
     FastClick.attach(document.body);
 
     // Note: CKEDITOR is initialized in here. Events are attached in here.
-    loadNote($("#noteId").val());
+    loadNote(getNoteId());
 
     $(".save").on("click", function() {
-        saveNote($("#noteId").val(), CKEDITOR.instances.editor.getData());
+        saveNote(CKEDITOR.instances.editor.getData());
     });
 
     var offset = $(".scroller-save").offset();  

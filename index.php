@@ -6,12 +6,6 @@ date_default_timezone_set($cfg['timezone']);
 
 $mongo = new Mongo($cfg['mongoHost']);
 
-$secret = isset($_GET['s']) ? $_GET['s'] : "";
-if (!isset($_GET['n'])) {
-    header("Location:?n=home&s=" . $secret);
-    exit();
-}
-
 function cleanForHtmlQuotes($arg) {
     return str_replace("\"", "\\\"", $arg);
 }
