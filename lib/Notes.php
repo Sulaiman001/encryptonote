@@ -127,7 +127,20 @@ class Notes {
      * Returns all notes for an author.
      */
     public function findAllNotes($author) {
-        return $this->documentManager->getRepository("Note")->findBy(array("author" => $author));
+        return $this->documentManager->getRepository("Documents\Note")->findBy(array("author" => $author));
+    }
+
+    public function listNoteIds($author) {
+        $notes = $this->findAllNotes($author);
+        if (is_null($notes)) {
+            return [];
+        } else {
+            $ret = [];
+            foreach ($notes as $note) {
+                $ret[] = $note->getId();
+            }
+            return $ret;
+        }
     }
 
 }
