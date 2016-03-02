@@ -7,7 +7,7 @@ function addSecret() {
 }
 
 function loadNote(noteId) {
-    $.getJSON("services.php?n=" + noteId + addSecret(), function (json) {
+    $.getJSON("services.php?a=load-note&n=" + noteId + addSecret(), function (json) {
         if (json.hasOwnProperty("status")) {
             $(".message").html(json.message).addClass("callout").addClass("warning");
         } else {
@@ -32,7 +32,7 @@ function saveNote(text) {
     $.ajax({
         type: "POST",
         url: "services.php",
-        data: "n=" + enc(getNoteId()) + "&text=" + enc(text) + addSecret(),
+        data: "a=save-note&n=" + enc(getNoteId()) + "&text=" + enc(text) + addSecret(),
         dataType: "json",
         success: function(json) {
             if (json.status === "ok") {

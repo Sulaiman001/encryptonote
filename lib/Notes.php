@@ -35,10 +35,15 @@ class Notes {
 
     /**
      * Validates secret against configured hash.
+     * @return Returns an '(string) author' or false.
      */
     public function validate($secret) {
-        return (isset($_GET['s']) && in_array(hash($this->cfg['hash'], $_GET['s']), $this->cfg['secrets']))
-            || (isset($_POST['s']) && in_array(hash($this->cfg['hash'], $_POST['s']), $this->cfg['secrets']));
+        $hash = $this->isVarSet($secret) ? hash($this->cfg['hash'], $secret) : false;
+        if (in_array($hash, $this->cfg['secrets'])) {
+            return $this->getAuthorFromHash($hash);
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -46,6 +51,13 @@ class Notes {
      */
     public function getAuthor($secret) {
         $hash = hash($this->cfg['hash'], $secret);
+        return $this->getAuthorFromHash($hash);
+    }
+
+    /**
+     * Given a secret extract the author from the config.
+     */
+    public function getAuthorFromHash($hash) {
         return array_search($hash, $this->cfg['secrets']);
     }
 
@@ -78,6 +90,44 @@ class Notes {
                 return false;
             }
         }
+    }
+
+    /**
+     * A helper function for asserting two values.
+     *
+     * @param string $expected This is what you expect. e.g. get("load-note", $_GET['var'])
+     * @param string $got This is the variable in question. e.g. $_GET['var']
+     */
+    public function get($expected, $got) {
+        if ($this->isVarSet($expected) && $this->isVarSet($got)) {
+            if ($expected === $got) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * A wrapper to check if a variable is set. Must be set, not null, and contain
+     * more than whitespace.
+     */
+    public function isVarSet($var) {
+        $var = trim($var);
+        if (isset($var) && $var != null && $var !== "") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Returns all notes for an author.
+     */
+    public function findAllNotes($author) {
+        return $this->documentManager->getRepository("Note")->findBy(array("author" => $author));
     }
 
 }

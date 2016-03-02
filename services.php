@@ -34,46 +34,51 @@ $dm = DocumentManager::create($connection, $config);
 
 $notes = new Notes($dm, $cfg);
 
-if ($notes->validate($_GET['s'])) {
+$secret = $notes->isVarSet($_GET['s']) ? $_GET['s'] : ($notes->isVarSet($_POST['s']) ? $_POST['s'] : false);
+if ($author = $notes->validate($secret)) {
 
     // A note is requested.
-    if (isset($_GET['n'])) {
+    if ($notes->get("load-note", $_GET['a']) && $notes->isVarSet($_GET['n'])) {
 
         $note = $notes->getNote($_GET['n']);
         if (is_null($note)) {
             $note = new Note();
             $note->setId($_GET['n']);
-            $note->setText($notes->encrypt("Lorem ipsum.", $_GET['s']));
-            $note->setAuthor($notes->getAuthor($_GET['s']));
+            $note->setText($notes->encrypt("Lorem ipsum.", $secret));
+            $note->setAuthor($author);
             $note->setCreated(new DateTime());
             $note->setModified(new DateTime());
             $dm->persist($note);
             $dm->flush();
         }
-        if ($notes->validateAuthor($_GET['s'], $_GET['n'])) {
+        if ($notes->validateAuthor($secret, $_GET['n'])) {
             // This overrides the encrypted text with the decrypted text so that
             // we can serialize to JSON. Possibly Note->jsonSerialize() could handle the decryption.
-            $note->setText($notes->decrypt($note->getText(), $_GET['s']));
+            $note->setText($notes->decrypt($note->getText(), $secret));
             die(json_encode($note));
         } else {
             die(json_encode(array("status" => "error", "message" => "Access denied")));
         }
 
+    } elseif ($notes->get("list-notes", $_GET['a'])) {
+
+        $notes = $notes->findAllNotes($author);
+
     // Saving a note.
-    } else if (isset($_POST['n']) && isset($_POST['text']) 
-            && $notes->validateAuthor($_POST['s'], $_POST['n'])) {
+    } else if ($notes->get("save-note", $_POST['a']) && $notes->isVarSet($_POST['n']) 
+            && $notes->isVarSet($_POST['text']) && $notes->validateAuthor($secret, $_POST['n'])) {
 
         try {
             $note = $notes->getNote($_POST['n']);
             if (is_null($note)) {
                 $note = new Note();
                 $note->setId($_POST['n']);
-                $note->setText($notes->encrypt($_POST['text'], $_POST['s']));
-                $note->setAuthor($notes->getAuthor($_POST['s']));
+                $note->setText($notes->encrypt($_POST['text'], $secret));
+                $note->setAuthor($author);
                 $note->setCreated(new DateTime());
                 $note->setModified(new DateTime());
             } else {
-                $note->setText($notes->encrypt($_POST['text'], $_POST['s']));
+                $note->setText($notes->encrypt($_POST['text'], $secret));
                 $note->setModified(new DateTime());
             }
             $dm->persist($note);
