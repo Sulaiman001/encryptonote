@@ -68,6 +68,7 @@ $html = <<<eof
         <script src="js/app.js"></script>
         <script src="js/ckeditor/ckeditor.js"></script>
         <script src="js/vendor/fastclick.js"></script>
+        <script src="js/jquery.hotkeys.js"></script>
         <script src="js/notes.js"></script>
     </body>
 </html>

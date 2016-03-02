@@ -113,4 +113,8 @@ $(document).ready(function() {
             $(".scroller-save").removeClass("scroller");
         }
     });  
+
+    $(document).bind("keydown", "ctrl+s", function() {
+        saveNote(CKEDITOR.instances.editor.getData());
+    });
 });
