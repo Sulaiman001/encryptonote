@@ -37,30 +37,35 @@ $html = <<<eof
     </head>
     <body>
         <div class="message"></div>
-        <div class="row">
-            <div class="large-12 medium-12 small-12 columns">
-                <form>
-                    <div class="row">
-                        <div class="large-12 medium-12 small-12 columns align">
-                            <button type="button" class="save success button scroller-save">Save</button>
-                            <span class="label">Last saved: <span class="last-saved"></span></span>
+
+        <div class="content"></div>
+
+        <!--<script id="notes-editor" type="text/x-handlebars-template">-->
+            <div class="row">
+                <div class="large-12 medium-12 small-12 columns">
+                    <form>
+                        <div class="row">
+                            <div class="large-12 medium-12 small-12 columns align">
+                                <button type="button" class="save success button scroller-save">Save</button>
+                                <span class="label">Last saved: <span class="last-saved"></span></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="large-12 medium-12 small-12 columns">
-                            <textarea name="editor" id="editor" rows="40"></textarea>
-                            <br />
+                        <div class="row">
+                            <div class="large-12 medium-12 small-12 columns">
+                                <textarea name="editor" id="editor" rows="40"></textarea>
+                                <br />
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="large-12 medium-12 small-12 columns align">
-                            <button type="button" class="save success button">Save</button>
-                            <span class="label">Last saved: <span class="last-saved"></span></span>
+                        <div class="row">
+                            <div class="large-12 medium-12 small-12 columns align">
+                                <button type="button" class="save success button">Save</button>
+                                <span class="label">Last saved: <span class="last-saved"></span></span>
+                            </div>
                         </div>
-                    </div>
-                </form>                
+                    </form>                
+                </div>
             </div>
-        </div>
+        <!--</script>-->
 
         <script src="js/vendor/jquery.min.js"></script>
         <script src="js/vendor/what-input.min.js"></script>
@@ -69,6 +74,8 @@ $html = <<<eof
         <script src="js/ckeditor/ckeditor.js"></script>
         <script src="js/vendor/fastclick.js"></script>
         <script src="js/jquery.hotkeys.js"></script>
+        <script src="js/handlebars.min.js"></script>
+        <script src="js/handlebars.runtime.js"></script>
         <script src="js/notes.js"></script>
     </body>
 </html>

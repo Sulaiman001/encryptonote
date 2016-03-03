@@ -22,6 +22,29 @@ TECHNOLOGIES USED
 * OpenSSL
 * CKEditor
 
+QUICKSTART
+==========
+
+Copy `example.config.php` to `config.php` and edit,
+
+    $cfg['mongoHost'] = "localhost:27017";
+    $cfg['mongoDatabase'] = "notes_db";
+    $cfg['timezone'] = "America/Los_Angeles";
+    $cfg['secrets'] = array("foobar" => "dea328d398f89527aafc56181d299b35260ef3ba20ab9651afa60e1bad24c089");
+    $cfg['salt'] = "yZO6LH8QM8ZXdtQt";
+    $cfg['cipher'] = "AES-256-CBC";
+    $cfg['hash'] = "sha256";
+    $cfg['date-format'] = "F j, Y, g:i a";
+
+Install PHP dependencies,
+
+    composer install
+
+Open: https://example.com/notes/#/note/my-first-note/dea328d398f89527aafc56181d299b35260ef3ba20ab9651afa60e1bad24c089
+
+Notice, `my-first-note` is an arbitrary note id, and we've included the hash from `$cfg['secrets']` in the URL.
+See `INSTALL` below for more information.
+
 INSTALL
 =======
 
