@@ -1,3 +1,3 @@
 #!/bin/bash
 
-vim index.php services.php js/notes.js css/notes.css css/notes-mobile.css Documents/Note.php example.config.php config.php README.md lib/Notes.php
+vim index.php services.php js/notes.js css/notes.css css/notes-mobile.css Documents/Note.php example.config.php config.php README.md lib/Notes.php tmpl/index.tmpl tmpl/notes-editor.tmpl
