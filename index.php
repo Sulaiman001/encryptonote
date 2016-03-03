@@ -4,8 +4,6 @@ require_once("config.php");
 
 date_default_timezone_set($cfg['timezone']);
 
-$mongo = new Mongo($cfg['mongoHost']);
-
 function cleanForHtmlQuotes($arg) {
     return str_replace("\"", "\\\"", $arg);
 }
