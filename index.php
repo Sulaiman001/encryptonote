@@ -36,9 +36,9 @@ $html = <<<eof
     <body>
         <div class="message"></div>
 
-        <div class="content"></div>
+        <div id="content"></div>
 
-        <!--<script id="notes-editor" type="text/x-handlebars-template">-->
+        <script id="notes-editor" type="text/x-handlebars-template">
             <div class="row">
                 <div class="large-12 medium-12 small-12 columns">
                     <form>
@@ -63,7 +63,7 @@ $html = <<<eof
                     </form>                
                 </div>
             </div>
-        <!--</script>-->
+        </script>
 
         <script src="js/vendor/jquery.min.js"></script>
         <script src="js/vendor/what-input.min.js"></script>
@@ -72,8 +72,7 @@ $html = <<<eof
         <script src="js/ckeditor/ckeditor.js"></script>
         <script src="js/vendor/fastclick.js"></script>
         <script src="js/jquery.hotkeys.js"></script>
-        <script src="js/handlebars.min.js"></script>
-        <script src="js/handlebars.runtime.js"></script>
+        <script src="js/handlebars-v4.0.5.js"></script>
         <script src="js/notes.js"></script>
     </body>
 </html>

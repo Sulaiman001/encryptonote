@@ -6,11 +6,41 @@ function addSecret() {
     return "&s=" + enc(getSecret());
 }
 
-function loadNote(noteId) {
+function loadTemplate(templateId) {
+    var notesEditorTemplate = $("#" + templateId).html();
+    var notesEditorHtml = Handlebars.compile(notesEditorTemplate);
+    $("#content").html(notesEditorHtml);
+}
+
+function applyEditorEvents() {
+    $(".save").on("click", function() {
+        saveNote(CKEDITOR.instances.editor.getData());
+    });
+
+    var offset = $(".scroller-save").offset();  
+    $(window).scroll(function () {  
+        var scrollTop = $(window).scrollTop();
+        if (offset.top < scrollTop) {
+            $(".scroller-save").addClass("scroller");
+        } else {
+            $(".scroller-save").removeClass("scroller");
+        }
+    });  
+
+    CKEDITOR.instances.editor.document.on("keyup", function(e) {
+        if ($(".save").hasClass("success")) {
+            $(".save").removeClass("success").addClass("warning");
+        }
+    });
+}
+
+function loadNote(noteId, callback) {
     $.getJSON("services.php?a=load-note&n=" + noteId + addSecret(), function (json) {
         if (json.hasOwnProperty("status")) {
             $(".message").html(json.message).addClass("callout").addClass("warning");
         } else {
+            loadTemplate("notes-editor");
+
             CKEDITOR.replace("editor");
 
             $("#editor").val(json.text);
@@ -18,11 +48,7 @@ function loadNote(noteId) {
             $(".last-saved").html(new Date(json.modified.date));
 
             CKEDITOR.instances.editor.on("instanceReady", function() {
-                CKEDITOR.instances.editor.document.on("keyup", function(e) {
-                    if ($(".save").hasClass("success")) {
-                        $(".save").removeClass("success").addClass("warning");
-                    }
-                });
+                callback();
             });
         }
     });
@@ -98,21 +124,7 @@ $(document).ready(function() {
     FastClick.attach(document.body);
 
     // Note: CKEDITOR is initialized in here. Events are attached in here.
-    loadNote(getNoteId());
-
-    $(".save").on("click", function() {
-        saveNote(CKEDITOR.instances.editor.getData());
-    });
-
-    var offset = $(".scroller-save").offset();  
-    $(window).scroll(function () {  
-        var scrollTop = $(window).scrollTop();
-        if (offset.top < scrollTop) {
-            $(".scroller-save").addClass("scroller");
-        } else {
-            $(".scroller-save").removeClass("scroller");
-        }
-    });  
+    loadNote(getNoteId(), applyEditorEvents);
 
     $(document).bind("keydown", "ctrl+s", function() {
         saveNote(CKEDITOR.instances.editor.getData());
