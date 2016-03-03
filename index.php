@@ -17,11 +17,11 @@ $t = new WsTmpl();
 
 $t->setFile("tmpl/notes-editor.tmpl");
 $t->setData(array());
-$notesEditor = $t->compile();
+$notesEditor = $t->compile(true);
 
 $t->setFile("tmpl/index.tmpl");
 $t->setData(array("css" => $css, "noteId" => $noteId, "notes-editor" => $notesEditor));
 
-$index = $t->compile();
+$index = $t->compile(true);
 
 print($index);

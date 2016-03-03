@@ -87,7 +87,7 @@ class WsTmpl {
         return $this->html;
     }
 
-    public function compile() {
+    public function compile($compress = false) {
         $f = file($this->file);
 
         foreach ($f as $k => $line) {
@@ -108,6 +108,10 @@ class WsTmpl {
         }
 
         $this->html = implode("\n", $f);
+
+        if ($compress) {
+            $this->html = preg_replace("/\s\s*/", " ", $this->html) . "\n";
+        }
 
         return $this->html;
     }
