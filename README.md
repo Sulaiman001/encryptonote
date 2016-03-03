@@ -22,8 +22,8 @@ TECHNOLOGIES USED
 * OpenSSL
 * CKEditor
 
-QUICKSTART
-==========
+QUICK START
+===========
 
 Copy `example.config.php` to `config.php` and edit,
 
