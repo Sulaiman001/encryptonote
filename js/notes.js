@@ -1,3 +1,9 @@
+var favicon = new Favico({
+    bgColor: '#da8851',
+    animation: 'popFade'
+});
+var badgeCount = 0;
+
 function enc(s) {
     return encodeURIComponent(s);
 }
@@ -12,6 +18,11 @@ function loadTemplate(templateId) {
     $("#content").html(notesEditorHtml);
 }
 
+prevtime = parseInt(new Date().getTime());
+// Waits 500 milliseconds before performing search.
+threshold = 500;
+curval = "";
+t = null;
 function applyEditorEvents() {
     $(".save").on("click", function() {
         saveNote(CKEDITOR.instances.editor.getData());
@@ -28,8 +39,19 @@ function applyEditorEvents() {
     });  
 
     CKEDITOR.instances.editor.document.on("keyup", function(e) {
-        if ($(".save").hasClass("success")) {
-            $(".save").removeClass("success").addClass("warning");
+        curtime = parseInt(new Date() . getTime());
+        next = prevtime + threshold;
+        prevtime = curtime;
+        if(curtime < next) {
+            clearTimeout(t);
+            t = setTimeout(function() {
+                badgeCount = badgeCount + 1;
+                favicon.badge(badgeCount);
+                if ($(".save").hasClass("success")) {
+                    $(".save").removeClass("success").addClass("warning");
+                }
+            }, threshold);
+            return;
         }
     });
 }
@@ -62,6 +84,7 @@ function saveNote(text) {
         dataType: "json",
         success: function(json) {
             if (json.status === "ok") {
+                resetBadge();
                 $(".last-saved").fadeOut("fast");
                 $(".save").fadeOut("fast");
                 $(".last-saved").html(new Date());
@@ -77,8 +100,14 @@ function saveNote(text) {
     });
 }
 
+function resetBadge() {
+    badgeCount = 0;
+    favicon.reset();
+}
+
 var init = function() {
     "use strict";
+    resetBadge();
     switch(getAction()) {
         case "note":
             var noteId = getNoteId();
