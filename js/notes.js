@@ -115,6 +115,7 @@ var init = function() {
             if (undefined === noteId || noteId === null) {
                 window.location = "#/note/home/" + secret;
             }
+            loadNote(getNoteId(), applyEditorEvents);
             break;
         default:
             window.location.hash = "#/note/home/";
