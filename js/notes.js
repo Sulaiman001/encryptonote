@@ -66,8 +66,7 @@ function loadNote(noteId, callback) {
             CKEDITOR.replace("editor");
 
             $("#editor").val(json.text);
-            //console.log("json.modified.date: " + json.modified.date);
-            $(".last-saved").html(new Date(json.modified.date));
+            $(".last-saved").html(moment(json.modified.date).format("LLL"));
             $("title").html("#" + noteId);
 
             CKEDITOR.instances.editor.on("instanceReady", function() {
@@ -88,7 +87,7 @@ function saveNote(text) {
                 resetBadge();
                 $(".last-saved").fadeOut("fast");
                 $(".save").fadeOut("fast");
-                $(".last-saved").html(new Date());
+                $(".last-saved").html(moment().format("LLL"));
                 $(".last-saved").fadeIn("slow");
                 $(".save").fadeIn("slow");
                 if ($(".save").hasClass("warning")) {
