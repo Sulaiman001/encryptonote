@@ -40,6 +40,8 @@ Install PHP dependencies,
 
     composer install
 
+Copy `js/ckeditor/example.config.js` to `js/ckeditor/config.js`. Configure as needed.
+
 Open: https://example.com/notes/#/note/my-first-note/dea328d398f89527aafc56181d299b35260ef3ba20ab9651afa60e1bad24c089
 
 Notice, `my-first-note` is an arbitrary note id, and we've included the hash from `$cfg['secrets']` in the URL.
@@ -49,6 +51,8 @@ INSTALL
 =======
 
 Copy `example.config.php` to `config.php` and edit.
+
+Copy `js/ckeditor/example.config.js` to `js/ckeditor/config.js`. Configure as needed.
 
 To create your secret (application API key) hash with sha256. This can be done easily
 with duckduckgo. For example, https://duckduckgo.com/?q=sha256+test&ia=answer

@@ -19,8 +19,8 @@ function loadTemplate(templateId) {
 }
 
 prevtime = parseInt(new Date().getTime());
-// Waits 500 milliseconds before performing search.
-threshold = 500;
+// Waits x milliseconds before performing search.
+threshold = 1500;
 curval = "";
 t = null;
 function applyEditorEvents() {
@@ -66,8 +66,9 @@ function loadNote(noteId, callback) {
             CKEDITOR.replace("editor");
 
             $("#editor").val(json.text);
-            console.log("json.modified.date: " + json.modified.date);
+            //console.log("json.modified.date: " + json.modified.date);
             $(".last-saved").html(new Date(json.modified.date));
+            $("title").html("#" + noteId);
 
             CKEDITOR.instances.editor.on("instanceReady", function() {
                 callback();
