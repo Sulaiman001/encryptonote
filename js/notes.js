@@ -153,9 +153,6 @@ $(document).ready(function() {
 
     FastClick.attach(document.body);
 
-    // Note: CKEDITOR is initialized in here. Events are attached in here.
-    loadNote(getNoteId(), applyEditorEvents);
-
     $(document).bind("keydown", "ctrl+s", function() {
         saveNote(CKEDITOR.instances.editor.getData());
     });
