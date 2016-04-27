@@ -23,6 +23,12 @@ prevtime = parseInt(new Date().getTime());
 threshold = 1500;
 curval = "";
 t = null;
+
+prevtime2 = parseInt(new Date().getTime());
+// Waits x milliseconds before performing search.
+threshold2 = 1500;
+curval2 = "";
+t2 = null;
 function applyEditorEvents() {
     $(".save").on("click", function() {
         saveNote(CKEDITOR.instances.editor.getData());
@@ -62,9 +68,23 @@ function applyEditorEvents() {
     CKEDITOR.instances.editor.on("afterCommandExec", function (event) {
         var command = event.data.name;
         console.log("Command executed: " + command);
+        curtime2 = parseInt(new Date() . getTime());
+        next2 = prevtime2 + threshold2;
+        prevtime2 = curtime2;
+        if(curtime2 < next2) {
+            clearTimeout(t2);
+            t2 = setTimeout(function() {
+                badgeCount = badgeCount + 1;
+                favicon.badge(badgeCount);
+                if ($(".save").hasClass("success")) {
+                    $(".save").removeClass("success").addClass("warning");
 
-        // TODO: This line enables auto-save
-        $(".save").click();
+                    // TODO: This line enables auto-save
+                    $(".save").click();
+                }
+            }, threshold2);
+            return;
+        }
     });
 }
 
