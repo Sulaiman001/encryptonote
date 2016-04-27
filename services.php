@@ -90,6 +90,10 @@ if (author) {
             }
             $dm->persist($note);
             $dm->flush();
+
+            // TODO: Create and store a delta/diff
+            file_put_contents(".deltas/" date("YmdHis") . "." . str_replace(" ", "", microtime()) . "." . noteId, $note->getText());
+
             die(json_encode(array("status" => "ok", "message" => "Note saved")));
         } catch (Exception $ex) {
             die(json_encode(array("status" => "error", "message" => "Note not saved: " . $ex->getMessage())));
