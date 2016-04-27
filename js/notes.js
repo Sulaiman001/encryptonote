@@ -50,12 +50,21 @@ function applyEditorEvents() {
                 if ($(".save").hasClass("success")) {
                     $(".save").removeClass("success").addClass("warning");
 
-                    // This line enables auto-save
+                    // TODO: This line enables auto-save
                     $(".save").click();
                 }
             }, threshold);
             return;
         }
+    });
+
+
+    CKEDITOR.instances.editor.on("afterCommandExec", function (event) {
+        var command = event.data.name;
+        console.log("Command executed: " + command);
+
+        // TODO: This line enables auto-save
+        $(".save").click();
     });
 }
 
