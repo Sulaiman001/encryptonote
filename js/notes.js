@@ -49,6 +49,9 @@ function applyEditorEvents() {
                 favicon.badge(badgeCount);
                 if ($(".save").hasClass("success")) {
                     $(".save").removeClass("success").addClass("warning");
+
+                    // This line enables auto-save
+                    $(".save").click();
                 }
             }, threshold);
             return;
