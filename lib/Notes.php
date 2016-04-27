@@ -153,4 +153,11 @@ class Notes {
         return str_replace("\"", "\\\"", $arg);
     }
 
+    public static function makeTextDiffable($text) {
+        $from = array("/(<.*?>)/");
+        $to = array("\n\${1}\n");
+        $text = preg_replace($from, $to, $text);
+        return explode("\n", $text);
+    }
+
 }

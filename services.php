@@ -77,7 +77,12 @@ if (author) {
 
         try {
             $note = $notes->getNote(noteId);
+            $noteBefore = "";
+            $saveBackup = false;
             if (is_null($note)) {
+                $saveBackup = true;
+                // This note is new, just persist the current text.
+                $noteBefore = text;
                 $note = new Note();
                 $note->setId(noteId);
                 $note->setText($notes->encrypt(text, secret));
@@ -85,6 +90,11 @@ if (author) {
                 $note->setCreated(new DateTime());
                 $note->setModified(new DateTime());
             } else {
+                // This note is being updated, get the previous text before setting the new text.
+                $noteBefore = $notes->decrypt($note->getText(), secret);
+                if ($noteBefore !== text) {
+                    $saveBackup = true;
+                }
                 $note->setText($notes->encrypt(text, secret));
                 $note->setModified(new DateTime());
             }
@@ -92,12 +102,14 @@ if (author) {
             $dm->flush();
 
             // TODO: Create and store a delta/diff
-            $savePath = ".deltas/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . date("H") . "/" . date("i") . "/" . date("s");
-            $saveFile = str_replace(" ", "", microtime()) . "." . noteId;
-            if (!file_exists($savePath)) {
-                mkdir($savePath, 0777, true);
+            if ($saveBackup) {
+                $savePath = ".deltas/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . date("H") . "/" . date("i") . "/" . date("s");
+                $saveFile = str_replace(" ", "", microtime()) . "." . noteId;
+                if (!file_exists($savePath)) {
+                    mkdir($savePath, 0777, true);
+                }
+                file_put_contents("{$savePath}/{$saveFile}", $noteBefore);
             }
-            file_put_contents("{$savePath}/{$saveFile}", $note->getText());
 
             die(json_encode(array("status" => "ok", "message" => "Note saved")));
         } catch (Exception $ex) {
