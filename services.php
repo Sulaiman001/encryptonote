@@ -92,10 +92,12 @@ if (author) {
             $dm->flush();
 
             // TODO: Create and store a delta/diff
-            if (!file_exists(".deltas")) {
-                mkdir(".deltas");
+            $savePath = ".deltas/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . date("H") . "/" . date("i") . "/" . date("s");
+            $saveFile = str_replace(" ", "", microtime()) . "." . noteId;
+            if (!file_exists($savePath)) {
+                mkdir($savePath, 0777, true);
             }
-            file_put_contents(".deltas/" . date("YmdHis") . "." . str_replace(" ", "", microtime()) . "." . noteId, $note->getText());
+            file_put_contents("{$savePath}/{$saveFile}", $note->getText());
 
             die(json_encode(array("status" => "ok", "message" => "Note saved")));
         } catch (Exception $ex) {
