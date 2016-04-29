@@ -26,7 +26,7 @@ t = null;
 
 prevtime2 = parseInt(new Date().getTime());
 // Waits x milliseconds before performing search.
-threshold2 = 1500;
+threshold2 = 5000;
 curval2 = "";
 t2 = null;
 function applyEditorEvents() {
